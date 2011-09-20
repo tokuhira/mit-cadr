@@ -291,15 +291,13 @@ struct {
 int child_conn_count;
 
 void
-fork_file(char *arg)
+fork_server(char *app_name, char *arg)
 {
     int ret, r, i;
     int svdo[2], svdi[2], svc[2], svs[2];
     int tmp[2];
 
-#define app_name "./FILE"
-
-    tracef(TRACE_MED, "fork_file('%s')\n", arg);
+    tracef(TRACE_MED, "fork_server('%s':'%s')\n", app_name, arg);
 
     ret = socketpair(AF_UNIX, SOCK_DGRAM, 0, tmp);
 
@@ -345,7 +343,7 @@ fork_file(char *arg)
             child_fd_ctl = svc[0];
             child_fd_sctl = svs[0];
             debugf(DBG_LOW,
-                   "fork_file() pid %d, fd_o %d, fd_i %d, "
+                   "fork_server() pid %d, fd_o %d, fd_i %d, "
                    "fd_ctl %d, fd_sctl %d\n",
                    child_pid,
                    child_conn[0].fd_out, child_conn[0].fd_in,
@@ -658,9 +656,33 @@ start_file(void *conn, char *args, int arglen)
         parg = &args[i+1];
     }
 
-    fork_file(parg);
+    fork_server("./FILE", parg);
 }
 
+void
+start_mini(void *conn, char *args, int arglen)
+{
+    int i;
+    char *parg;
+
+    child_conn[0].conn = conn;
+    child_conn[0].fd_out = -1;
+    child_conn[0].fd_in = -1;
+    child_conn_count = 1;
+
+    /* skip over RFC name */
+    for (i = 0; i < arglen; i++) {
+        if (args[i] == ' ')
+            break;
+    }
+    parg = 0;
+    if (args[i] == ' ') {
+        args[arglen] = 0;
+        parg = &args[i+1];
+    }
+
+    fork_server("./MINI", parg);
+}
 
 int
 read_chaos(void)

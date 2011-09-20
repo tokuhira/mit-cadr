@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 #include <sys/types.h>
 #include <sys/uio.h>
@@ -828,6 +829,17 @@ rcvrfc(struct packet *pkt)
 		ch_accept(conn);
 
 		start_file(conn, pkt->pk_cdata, PH_LEN(pkt->pk_phead));
+		return;
+	}
+	if (concmp(pkt, "MINI", 4)) {
+		/* this is a hack to fake what chserver.c would do */
+		struct packet *p = ch_alloc_pkt(10);
+		strcpy(p->pk_cdata, "MINI");
+		conn = ch_listen(p, 0);
+		lsnmatch(pkt, conn);
+		ch_accept(conn);
+
+		start_mini(conn, pkt->pk_cdata, PH_LEN(pkt->pk_phead));
 		return;
 	}
 #endif

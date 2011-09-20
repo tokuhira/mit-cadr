@@ -159,3 +159,7 @@ extern int globerr;			/* Error return from glob() */
 #if defined(__APPLE__) && defined(__MACH__)
 #define OSX
 #endif
+
+#if defined(__NetBSD__) || defined(__FreeBSD__) || defined(__OpenBSD__)
+#define BSD42
+#endif

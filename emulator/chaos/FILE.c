@@ -79,6 +79,11 @@
 /* use utimes instead of "outmoded" utime */
 #endif
 
+#ifdef __NetBSD__
+#include <utime.h>
+#include <sys/statvfs.h>
+#endif
+
 #define LOG_INFO	0
 #define LOG_ERR		1
 #define LOG_NOTICE      2
@@ -702,7 +707,7 @@ char **argv;
 
 	if ((ufd = open(FILEUTMP, 1)) >= 0) {
 		(void)lseek(ufd,
-			    (long)(mylogin.cl_cnum * sizeof(struct chlogin)),
+			    (off_t)(mylogin.cl_cnum * sizeof(struct chlogin)),
 			    0);
 		(void)write(ufd, (char *)&mylogin, sizeof(mylogin));
 		(void)close(ufd);
@@ -1516,7 +1521,7 @@ log(LOG_INFO, "FILE: login() pw ok\n");
 		strncpy(mylogin.cl_user, p->pw_name, sizeof(mylogin.cl_user));
 		if ((ufd = open(FILEUTMP, 1)) >= 0) {
 			(void)lseek(ufd,
-			  (long)(mylogin.cl_cnum * sizeof(struct chlogin)),
+			  (off_t)(mylogin.cl_cnum * sizeof(struct chlogin)),
 			    0);
 			(void)write(ufd, (char *)&mylogin, sizeof(mylogin));
 			(void)close(ufd);
@@ -2510,7 +2515,7 @@ struct xfer *ax;
 			
 			log(LOG_INFO, "xclose (3b)\n");
 			
-#ifdef OSX
+#if defined(OSX) || defined(BSD42)
 			struct timeval timep[2];
 
 			timep[0].tv_sec = (x->x_options&O_PRESERVE ||
@@ -2539,7 +2544,7 @@ struct xfer *ax;
 			 
 			log(LOG_INFO, "xclose (3c)\n");
 
-#ifdef OSX
+#if defined(OSX) || defined(BSD42)
 			if (utimes(x->x_realname, timep)) {
 			   log(LOG_INFO, "error from utimes: errno = %d %s\n", errno, strerror(errno));
 			}
@@ -2626,9 +2631,9 @@ register struct transaction *t;
 		errstring = "Incorrect transfer state for FILEPOS";
 		error(t, x->x_fh->f_name, BUG);
 	} else {
-		long new = t->t_args->a_numbers[0];
-		long old = tell(x->x_fd);
-		long size = lseek(x->x_fd, 0L, 2);
+		off_t new = t->t_args->a_numbers[0];
+		off_t old = tell(x->x_fd);
+		off_t size = lseek(x->x_fd, 0L, 2);
 
 		/* Adjust for bytesize */
 		new *= (x->x_bytesize == 16 ? 2 : 1);
@@ -3506,7 +3511,11 @@ char *cp;
 	long	used;
 	int	fd, len;
 	struct stat mstbuf;
+#ifdef __NetBSD__
+	struct statvfs sblock;
+#else
 	struct statfs sblock;
+#endif
 	struct mtab {
 		char path[32];
 		char spec[32];
@@ -3529,8 +3538,13 @@ char *cp;
 	if(len != sizeof(mtab))
 		return 0;
 
+#ifdef __NetBSD__
+	if (statvfs(mtab.path, &sblock) == -1)
+		return 0;
+#else
 	if (statfs(dev, &sblock))
 		return 0;
+#endif
 	total = sblock.f_bsize * (sblock.f_blocks - sblock.f_bfree);
 	free = sblock.f_bsize * sblock.f_bfree;
 	used = total - free;
@@ -4209,7 +4223,7 @@ register struct xfer *x;
 		}
 		while (x->x_room != 0) {
 			if (x->x_left == 0) {
-				long pos = tell(x->x_fd);
+				off_t pos = tell(x->x_fd);
 				register int n;
 
 				if (log_verbose) {

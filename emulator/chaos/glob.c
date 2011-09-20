@@ -208,7 +208,7 @@ matchdir(pattern)
 
 	dirp = opendir(gpath);
 	if (dirp != NULL)
-#if defined(linux) || defined(OSX)
+#if defined(linux) || defined(OSX) || defined(BSD42)
 		dirf = dirfd(dirp);
 #else
 		dirf = ((struct DIR *)dirp)->dd_fd;
