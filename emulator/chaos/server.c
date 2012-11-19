@@ -72,7 +72,7 @@ dumpbuffer(u_char *buf, int cnt)
         } else {
             if (skipping) {
                 skipping = 0;
-                printf("...\n");
+                fprintf(stderr, "...\n");
             }
         }
 
@@ -92,7 +92,7 @@ dumpbuffer(u_char *buf, int cnt)
             }
             cbuf[16] = 0;
 
-            printf("%08x %s %s\n", offset, line, cbuf);
+            fprintf(stderr, "%08x %s %s\n", offset, line, cbuf);
         }
 
         buf += 16;
@@ -102,7 +102,7 @@ dumpbuffer(u_char *buf, int cnt)
 
     if (skipping) {
         skipping = 0;
-        printf("%08x ...\n", offset-16);
+        fprintf(stderr, "%08x ...\n", offset-16);
     }
 }
 
@@ -378,7 +378,7 @@ fork_server(char *app_name, char *arg)
 
     /* exec the application */
 //xxx - hack - arg should come from parsing packet
-    r = execl(app_name, app_name, "1", 0);
+    r = execl(app_name, app_name, "1", (char *)0);
 
     if (r) {
         log(LOG_WARNING, "can't exec %s; %%m", app_name);
@@ -620,7 +620,7 @@ read_child_ctl(void)
         break;
 
     case 3: /* setmode */
-        ret= ch_setmode(child_conn[conn_num].conn);
+        ret= ch_setmode(child_conn[conn_num].conn, mode);
 
         ctlbuf[0] = 3;
         ctlbuf[1] = ret;

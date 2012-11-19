@@ -204,7 +204,7 @@ fd_close(int index)
 static int
 fd_read(int index)
 {
-    int ret;
+    int ret = 0;
     
     debugf(DBG_LOW, "fd_read(index=%d)\n", index);
 

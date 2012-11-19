@@ -48,7 +48,11 @@ connect_to_server(void)
 
     unix_addr.sun_family = AF_UNIX;
 //    len = strlen(unix_addr.sun_path) + sizeof(unix_addr.sun_family);
+#if defined(OSX)
+    len = (int)SUN_LEN(&unix_addr);
+#else
     len = strlen(unix_addr.sun_path) + sizeof unix_addr - sizeof unix_addr.sun_path;
+#endif
 
     unlink(unix_addr.sun_path);
 
@@ -68,7 +72,11 @@ connect_to_server(void)
     sprintf(unix_addr.sun_path, "%s%s",
 	    UNIX_SOCKET_PATH, UNIX_SOCKET_SERVER_NAME);
     unix_addr.sun_family = AF_UNIX;
+#if defined(OSX)
+    len = (int)SUN_LEN(&unix_addr);
+#else
     len = strlen(unix_addr.sun_path) + sizeof(unix_addr.sun_family);
+#endif
 
     if (connect(fd, (struct sockaddr *)&unix_addr, len) < 0) {
       perror("connect(AF_UNIX)");

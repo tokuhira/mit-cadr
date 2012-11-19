@@ -126,10 +126,10 @@ typedef struct {
   unsigned char msb;
 } chpklenfc;
 
-#define LENFC_LEN(lenfc) ((lenfc).lsb | (((lenfc).msb & 0x0f) << 8))
+#define LENFC_LEN(lenfc) ((lenfc).lsb | ((int)((lenfc).msb & 0x0f) << 8))
 #define LENFC_FC(lenfc) (((lenfc).msb & 0xf0) >> 4)
 #define SET_LENFC_LEN(lenfc,len) do {  (lenfc).lsb = (len) & 0xff; \
-(lenfc).msb = ((lenfc).msb & 0xf0) & (((len) & 0x0f00) >> 8); } while(0)
+(lenfc).msb = ((lenfc).msb & 0xf0) | (((len) & 0x0f00) >> 8); } while(0)
 #define SET_LENFC_FC(lenfc,fc) (lenfc).msb = (((lenfc).msb & 0x0f) | ((fc & 0xf) << 4))
 
 #define PH_LEN(ph) (LENFC_LEN(ph.ph_lenfc))

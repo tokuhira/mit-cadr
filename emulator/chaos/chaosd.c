@@ -284,9 +284,14 @@ start_serverd(void)
     /* repoen stdin, stdout, stderr as bit buckets */
     open("/dev/null", O_RDONLY);
     open("/dev/null", O_WRONLY);
-    open("/dev/null", O_WRONLY);
+    if (flag_debug_level == 0)
+	open("/dev/null", O_WRONLY);
+    else {
+	unlink("server.log");
+	open("server.log", O_WRONLY | O_CREAT);
+    }
 
-    execl("./server", "server", 0);
+    execl("./server", "server", (char *)0);
 
     fprintf(stderr,"exec of ./server failed\n");
     

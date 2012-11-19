@@ -84,6 +84,7 @@ node_destroy(node_t *node)
         }
     }
 #endif
+    return 0;
 }
 
 /*
@@ -210,11 +211,13 @@ node_stream_reader(int fd, void *void_node, int context)
 int
 node_init(void)
 {
+    return 0;
 }
 
 int
 node_poll(void)
 {
+    return 0;
 }
 
 

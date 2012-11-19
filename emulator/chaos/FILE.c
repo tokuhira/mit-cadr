@@ -79,7 +79,7 @@
 /* use utimes instead of "outmoded" utime */
 #endif
 
-#ifdef __NetBSD__
+#if defined(__NetBSD__) || defined(OSX)
 #include <utime.h>
 #include <sys/statvfs.h>
 #endif
@@ -1341,7 +1341,7 @@ register struct transaction *t;
 		    strcmp(ofhname, ifh->f_name) == 0) {
 			errstring = "File handle already exists";
 			error(t, "", BUG);
-			return;
+			return 1;
 		}
 	/*
 	 * The output file handle name is the contact name the user end
@@ -1357,7 +1357,7 @@ register struct transaction *t;
 			(void)close(fd);
 		errstring = "Data connection could not be established";
 		error(t, "", NET);
-		return;
+		return 1;
 	}
 	if ((ifh = salloc(file_handle)) == FNULL ||
 	    (ofh = salloc(file_handle)) == FNULL)
@@ -1377,6 +1377,7 @@ register struct transaction *t;
 	ofh->f_next = file_handles;
 	file_handles = ofh;
 	respond(t, NOSTR);
+	return 0;
 }
 
 /*
@@ -2042,11 +2043,12 @@ register struct transaction *t;
 				afree(a);
 				t->t_args = ANULL;
 				xcommand(t);
-				return;
+				return 0;
 			}
 			xflush(x);
 		}
 	error(t, t->t_fh->f_name, errcode);
+	return 1;
 }
 
 /*
@@ -2072,7 +2074,7 @@ register struct transaction *t;
 	x->x_left = x->x_bptr - x->x_bbuf;
 	x->x_bptr = x->x_bbuf;
 	x->x_state = X_PROCESS;
-	return;
+	return 0;
 }
 propread(x)
 register struct xfer *x;
@@ -2133,11 +2135,12 @@ register struct transaction *t;
 			afree(t->t_args);
 			t->t_args = ANULL;
 			xcommand(t);
-			return;
+			return 0;
 		}
 		xflush(x);
 	}
 	error(t, t->t_fh->f_name, errcode);
+	return 1;
 }
 /*
  * Start up a directory transfer by first doing the glob and responding to the
@@ -2238,7 +2241,7 @@ register struct transaction *t;
 		x->x_left = x->x_bptr - x->x_bbuf;
 		x->x_bptr = x->x_bbuf;
 		x->x_state = X_PROCESS;
-		return;
+		return 0;
 	}
 derror:
 	error(t, t->t_fh->f_name, errcode);
@@ -2246,6 +2249,7 @@ derror:
 #ifndef SELECT
 	(void)write(ctlpipe[1], (char *)&ax, sizeof(x));
 #endif
+	return 1;
 }
 /*
  * Assemble a directory entry record in the buffer for this transfer.
@@ -2465,7 +2469,7 @@ struct xfer *ax;
 #endif 
         if (x->x_options & (O_DIRECTORY|O_PROPERTIES)) {
 		respond(t, NOSTR);
-		return;
+		return 0;
 	}
 	/*
 	 * If writing a file, rename the temp file.
@@ -2767,8 +2771,8 @@ register struct transaction *t;
 				(void)close(2);
 				(void)open("/dev/null", 2);
 				(void)dup(0); (void)dup(0);
-				execl("/bin/rmdir", "rmdir", real, 0);
-				execl("/usr/bin/rmdir", "rmdir", real, 0);
+				execl("/bin/rmdir", "rmdir", real, (char *)0);
+				execl("/usr/bin/rmdir", "rmdir", real, (char *)0);
 				exit(1);
 			} else if (pid == -1) {
 				errstring = "Can't fork subprocess for rmdir";
@@ -3002,7 +3006,7 @@ register struct transaction *t;
 
 	if ((t->t_args->a_options & ~(O_NEWOK|O_OLD|O_DELETED|O_READ|O_WRITE))) {
 		error(t, "", UUO);
-		return;
+		return 1;
 	}
 	d.dummy[sizeof(struct direct)] = '\0';
 	dfile = t->t_args->a_strings[0];
@@ -3265,6 +3269,7 @@ freeall:
 	if (dreal) free(dreal);
 	if (idir) free(idir);
 	if (ddir) free(ddir);	
+	return 0;
 }
 incommon(old, new)
 register char *old, *new;
@@ -3335,8 +3340,8 @@ register struct transaction *t;
 				(void)close(2);
 				(void)open("/dev/null", 2);
 				(void)dup(0); (void)dup(0);
-				execl("/bin/mkdir", "mkdir", dir, 0);
-				execl("/usr/bin/mkdir", "mkdir", dir, 0);
+				execl("/bin/mkdir", "mkdir", dir, (char *)0);
+				execl("/usr/bin/mkdir", "mkdir", dir, (char *)0);
 				exit(1);
 			}
 			while ((rp = wait(&st)) >= 0)
@@ -3451,7 +3456,7 @@ doit:
 						     plp->p_value, x)) {
 							error(t,
 							      fhname, errcode);
-							return;
+							return 0;
 						} else
 							break;
 					else {
@@ -3460,7 +3465,7 @@ doit:
 						"No a changeable property: %s",
 							plp->p_name);
 						error(t, fhname, CSP);
-						return;
+						return 0;
 					}
 			if (pp->p_indicator == NOSTR) {
 				(void)sprintf(errbuf,
@@ -3468,11 +3473,12 @@ doit:
 					plp->p_name);
 				errstring = errbuf;
 				error(t, fhname, UKP);
-				return;
+				return 0;
 			}
 		}
 		respond(t, NOSTR);
 	}
+	return 0;
 }
 
 /*
@@ -3768,11 +3774,19 @@ register struct xfer *x;
 		return IPV;
 	}
 	if (mtime != s->st_mtime) {
+#if defined(OSX)
+		struct utimbuf timep;
+
+		timep.actime = s->st_atime;
+		timep.modtime = mtime;
+		if (utime(file, &timep) < 0) {
+#else
 		time_t timep[2];
 
 		timep[0] = s->st_atime;
 		timep[1] = mtime;
 		if (utime(file, timep) < 0) {
+#endif
 			errstring =
 				"No permission to change modification time";
 			return ATF;
@@ -3811,11 +3825,19 @@ register struct xfer *x;
 		return IPV;
 	}
 	if (atime != s->st_atime) {
+#if defined(OSX)
+		struct utimbuf timep;
+
+		timep.modtime = s->st_mtime;
+		timep.actime = atime;
+		if (utime(file, &timep) < 0) {
+#else
 		time_t timep[2];
 
 		timep[1] = s->st_mtime;
 		timep[0] = atime;
 		if (utime(file, timep) < 0) {
+#endif
 			errstring = "No permission to change reference date";
 			return ATF;
 		} else if (x) {
@@ -4552,39 +4574,65 @@ register struct xfer *x;
 /*
  * Write an eof packet on a transfer.
  */
-xpweof(x)
-register struct xfer *x;
+int
+xpweof(register struct xfer *x)
 {
-	char op = EOFOP;
+        char op = EOFOP;
 
-	if (write(x->x_fh->f_fd, &op, 1) != 1)
-		return -1;
-	if (log_verbose) {
-		log(LOG_INFO, "FILE: wrote EOF to net\n");
+        if (write(x->x_fh->f_fd, &op, 1) != 1)
+	{
+        	log(LOG_ERR, "FILE: xpweof write failed (errno %d)\n", errno);
+                int tries = 0;
+                do {
+                        usleep(100);
+                        if (write(x->x_fh->f_fd, &op, 1) == 1) {
+                                log(LOG_ERR, "FILE: xpweof retry succeeded\n");
+                                return 0;
+                        }
+                } while (tries++ < 200000);
+                log(LOG_ERR, "FILE: exhausted retries, xpweof (errno %d)\n", errno);
+                return -1;
 	}
-	return 0;
+        if (log_verbose) {
+                log(LOG_INFO, "FILE: wrote EOF to net\n");
+        }
+        return 0;
 }
 
 /*
  * Write a transfer's packet.
  */
-xpwrite(x)
-register struct xfer *x;
+int
+xpwrite(register struct xfer *x)
 {
-	register int len;
+        register int len;
+        int ret;
 
-	len = x->x_pptr - x->x_pbuf;
-	if (len == 0)
-		return 0;
-	x->x_op = x->x_options & O_BINARY ? DWDOP : DATOP;
-	len++;
-	if (log_verbose) {
-		log(LOG_INFO, "FILE: writing (%d) %d bytes to net\n",
-		    x->x_op & 0377, len);
-	}
-	if (write(x->x_fh->f_fd, (char *)&x->x_pkt, len) != len)
-		return -1;
-	return 0;
+        len = x->x_pptr - x->x_pbuf;
+        if (len == 0)
+                return 0;
+        x->x_op = x->x_options & O_BINARY ? DWDOP : DATOP;
+        len++;
+        if (log_verbose) {
+                log(LOG_INFO, "FILE: writing (%d) %d bytes to net\n",
+                    x->x_op & 0377, len);
+                if (1) dumpbuffer((u_char *)&x->x_pkt, len);
+        }
+        if ((ret = write(x->x_fh->f_fd, (char *)&x->x_pkt, len)) != len) {
+                log(LOG_ERR, "FILE: write error %d (errno %d) to file %d\n",
+                        ret, errno, x->x_fh->f_fd);
+                int tries = 0;
+                do {
+                        usleep(100);
+                        if ((ret = write(x->x_fh->f_fd, (char *)&x->x_pkt, len)) == len) {
+                                log(LOG_ERR, "FILE: write error retry succeeded\n");
+                                return 0;
+                        }
+                } while (tries++ < 200000);
+                log(LOG_ERR, "FILE: exhausted retries, write error %d (errno %d) to file %d\n",ret, errno);
+                return -1;
+        }
+        return 0;
 }
 
 /*
@@ -4688,7 +4736,7 @@ put on runq or something, set up which fd and why to wait....
 		setjmp(closejmp);
 		for (;;) {
 			while ((x->x_flags & X_CLOSE) == 0) {
-				off_t nread;
+				off_t nread = 0;
 
 				(void)signal(SIGHUP, interrupt);
 				if (ioctl(x->x_pfd, FIONREAD, (char *)&nread) < 0)
@@ -4889,7 +4937,7 @@ register struct xfer *x;
  */
 void interrupt(int arg)
 {
-	off_t nread;
+	off_t nread = 0;
 
 #if !defined(BSD42) && !defined(linux) && !defined(OSX)
 	(void)signal(SIGHUP, interrupt);

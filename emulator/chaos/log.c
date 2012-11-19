@@ -51,7 +51,7 @@ log(int level, char *fmt, ...)
     va_end(ap);
 
     if (flag_daemon) {
-        syslog(level, string);
+        syslog(level, "%s", string);
     } else {
         printf("log: %s\n", string);
     }
@@ -69,7 +69,7 @@ log_shutdown(void)
 void
 debugf(int level, char *fmt, ...)
 {
-    char string[512], intro[64], *tail, *head;
+    char string[512], intro[64], *tail, *head = "";
     va_list ap;
     int len;
     int perror_no = 0;
@@ -111,9 +111,9 @@ debugf(int level, char *fmt, ...)
     }
 
     if (!flag_daemon) {
-        printf("%s %s%s%s", intro, head, string, tail);
+        fprintf(stderr, "%s %s%s%s", intro, head, string, tail);
         if (perror_no) {
-            printf("%s errno %d: %s\n", intro, perror_no, perror);
+            fprintf(stderr, "%s errno %d: %s\n", intro, perror_no, perror);
         }
     }
 
@@ -131,7 +131,7 @@ debugf(int level, char *fmt, ...)
 void
 tracef(int level, char *fmt, ...)
 {
-    char string[512], intro[64], *tail, *head;
+    char string[512], intro[64], *tail, *head = "";
     va_list ap;
     int len;
     int perror_no = 0;
