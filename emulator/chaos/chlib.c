@@ -219,5 +219,6 @@ char *string;
 	chr.cr_reason = string;
 	chr.cr_length = strlen(string);
 //	return ioctl(fd, CHIOCREJECT, &chr);
+	return 0;
 }
 
