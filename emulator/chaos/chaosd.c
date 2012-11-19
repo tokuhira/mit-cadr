@@ -288,7 +288,7 @@ start_serverd(void)
 	open("/dev/null", O_WRONLY);
     else {
 	unlink("server.log");
-	open("server.log", O_WRONLY | O_CREAT);
+	open("server.log", O_WRONLY | O_CREAT, 0666);
     }
 
     execl("./server", "server", (char *)0);
