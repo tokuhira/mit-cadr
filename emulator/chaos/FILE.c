@@ -73,7 +73,6 @@
 #endif
 
 #ifdef OSX
-#include <sys/param.h>
 #include <sys/mount.h>
 #include <sys/time.h> 
 /* use utimes instead of "outmoded" utime */
@@ -3774,18 +3773,18 @@ register struct xfer *x;
 		return IPV;
 	}
 	if (mtime != s->st_mtime) {
-#if defined(OSX)
-		struct utimbuf timep;
-
-		timep.actime = s->st_atime;
-		timep.modtime = mtime;
-		if (utime(file, &timep) < 0) {
-#else
+#if defined(LINUX)
 		time_t timep[2];
 
 		timep[0] = s->st_atime;
 		timep[1] = mtime;
 		if (utime(file, timep) < 0) {
+#else
+		struct utimbuf timep;
+
+		timep.actime = s->st_atime;
+		timep.modtime = mtime;
+		if (utime(file, &timep) < 0) {
 #endif
 			errstring =
 				"No permission to change modification time";
@@ -3825,18 +3824,18 @@ register struct xfer *x;
 		return IPV;
 	}
 	if (atime != s->st_atime) {
-#if defined(OSX)
-		struct utimbuf timep;
-
-		timep.modtime = s->st_mtime;
-		timep.actime = atime;
-		if (utime(file, &timep) < 0) {
-#else
+#if defined(LINUX)
 		time_t timep[2];
 
 		timep[1] = s->st_mtime;
 		timep[0] = atime;
 		if (utime(file, timep) < 0) {
+#else
+		struct utimbuf timep;
+
+		timep.modtime = s->st_mtime;
+		timep.actime = atime;
+		if (utime(file, &timep) < 0) {
 #endif
 			errstring = "No permission to change reference date";
 			return ATF;
@@ -4736,10 +4735,10 @@ put on runq or something, set up which fd and why to wait....
 		setjmp(closejmp);
 		for (;;) {
 			while ((x->x_flags & X_CLOSE) == 0) {
-				off_t nread = 0;
+				int nread;
 
 				(void)signal(SIGHUP, interrupt);
-				if (ioctl(x->x_pfd, FIONREAD, (char *)&nread) < 0)
+				if (ioctl(x->x_pfd, FIONREAD, &nread) < 0)
 					fatal("Failing FIONREAD");
 				if (nread == 0)
 					break;
@@ -4817,13 +4816,13 @@ xcheck()
 {
 	register int nprocs;
 	struct xfer *x;
-	off_t nread = 0;
+	int nread = 0;
 
 	if (ctlpipe[0] <= 0)
 		if (pipe(ctlpipe) < 0)
 			fatal("Can't create control pipe");
 	nprocs = 0;
-	if (ioctl(ctlpipe[0], FIONREAD, (char *)&nread) < 0)
+	if (ioctl(ctlpipe[0], FIONREAD, &nread) < 0)
 		fatal("Failing FIONREAD on control pipe");
 	while (nread) {
 		if (read(ctlpipe[0], (char *)&x, sizeof(x)) != sizeof(x))
@@ -4937,13 +4936,13 @@ register struct xfer *x;
  */
 void interrupt(int arg)
 {
-	off_t nread = 0;
+	int nread;
 
 #if !defined(BSD42) && !defined(linux) && !defined(OSX)
 	(void)signal(SIGHUP, interrupt);
 #endif
 	log(LOG_INFO, "Interrupt!\n");
-	if (ioctl(myxfer->x_pfd, FIONREAD, (char *)&nread) < 0)
+	if (ioctl(myxfer->x_pfd, FIONREAD, &nread) < 0)
 		fatal("Failing FIONREAD");
 	if (nread != 0)
 		longjmp(closejmp, 0);
