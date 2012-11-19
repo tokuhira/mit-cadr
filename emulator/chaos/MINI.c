@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <fcntl.h>
+#include <time.h>
 
 #include <sys/stat.h>
 #include <sys/ioctl.h>
@@ -114,7 +115,8 @@ char **argv;
 				strftime(tbuf, sizeof(tbuf), "%D %T", ptm);
 				length = sprintf(pout.cp_data, "%s%c%s",
 						 p.cp_data, 0215, tbuf);
-				write(1, (char *)&pout, length + 1);
+				while (write(1, (char *)&pout, length + 1) < 0)
+					usleep(10000);
 				binary = p.cp_op & 1;
 			}
 

@@ -103,7 +103,11 @@ chopen(int address, char *contact, int mode, int async, char *data, int dlength,
 		memcpy(&buffer[4 + sizeof(rfc)+rfc.co_length], rfc.co_data, rfc.co_length);
 
 	fprintf(stderr, "chopen: write\n"); fflush(stderr);
-	write(3, buffer, len);
+	if (write(3, buffer, len) < 0)
+	{
+		perror("chopen request");
+		fflush(stderr);
+	}
 
 	/* read back status and connection fd */
 	memset(cmsgbuf, 0, sizeof(cmsgbuf));
