@@ -291,7 +291,15 @@ start_serverd(void)
 	open("server.log", O_WRONLY | O_CREAT, 0666);
     }
 
-    execl("./server", "server", (char *)0);
+    if (flag_debug_level == 0)
+	execl("./server", "server", (char *)0);
+    else
+    {
+	char buffer[256];
+
+	sprintf(buffer, "-D%d", flag_debug_level);
+	execl("./server", "server", buffer, (char *)0); 
+    }
 
     fprintf(stderr,"exec of ./server failed\n");
     
