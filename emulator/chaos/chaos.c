@@ -227,11 +227,30 @@ rlsconn(struct connection *conn)
 	free((char *)conn);
 }
 
+char *opcodetable[256] = {
+    "UNKNOWN",			// 0
+    "RFC",			// 1
+    "OPN",			// 2
+    "CLS",			// 3
+    "FWD",			// 4
+    "ANS",			// 5
+    "SNS",			// 6
+    "STS",			// 7
+    "RUT",			// 8
+    "LOS",			// 9
+    "LSN",			// 10
+    "MNT",			// 11
+    "EOF",			// 12
+    "UNC",                      // 13
+    "BRD",                      // 14
+    "UNKNOWN",                  // 15
+};
+
 void
 prpkt(struct packet *pkt, char *str)
 {
-	debugf(DBG_LOW, "op=%s(%o) len=%d fc=%d; dhost=%o didx=%x; shost=%o sidx=%x\npkn=%d ackn=%d",
-		str, pkt->pk_op, PH_LEN(pkt->pk_phead), 
+	debugf(DBG_LOW, "op=%s(%s) len=%d fc=%d; dhost=%o didx=%x; shost=%o sidx=%x\npkn=%d ackn=%d",
+		str, pkt->pk_op == 128 ? "DAT" : pkt->pk_op == 129 ? "SYN" : pkt->pk_op == 192 ? "DWD" : opcodetable[pkt->pk_op], PH_LEN(pkt->pk_phead), 
 	        PH_FC(pkt->pk_phead), pkt->pk_dhost,
 		CH_INDEX_SHORT(pkt->pk_phead.ph_didx), pkt->pk_shost, 
 	        CH_INDEX_SHORT(pkt->pk_phead.ph_sidx),
@@ -1000,7 +1019,7 @@ rcvdata(struct connection *conn, struct packet *pkt)
 
 			pkt->pk_next = npkt;
 
-			debugf(DBG_INFO, "rcvdata: New out of order packet");
+			debugf(DBG_INFO, "rcvdata: New out of order packet %d", LE_TO_SHORT(pkt->LE_pk_pkn));
 		}
 	}
 }
