@@ -249,8 +249,9 @@ char *opcodetable[256] = {
 void
 prpkt(struct packet *pkt, char *str)
 {
-	debugf(DBG_LOW, "op=%s(%s) len=%d fc=%d; dhost=%o didx=%x; shost=%o sidx=%x\npkn=%d ackn=%d",
-		str, pkt->pk_op == 128 ? "DAT" : pkt->pk_op == 129 ? "SYN" : pkt->pk_op == 192 ? "DWD" : opcodetable[pkt->pk_op], PH_LEN(pkt->pk_phead), 
+	debugf(DBG_LOW, "op=%s(%s) num=%d len=%d fc=%d; dhost=%o didx=%x; shost=%o sidx=%x\npkn=%d ackn=%d",
+		str, pkt->pk_op == 128 ? "DAT" : pkt->pk_op == 129 ? "SYN" : pkt->pk_op == 192 ? "DWD" : opcodetable[pkt->pk_op],
+		LE_TO_SHORT(pkt->LE_pk_pkn), PH_LEN(pkt->pk_phead), 
 	        PH_FC(pkt->pk_phead), pkt->pk_dhost,
 		CH_INDEX_SHORT(pkt->pk_phead.ph_didx), pkt->pk_shost, 
 	        CH_INDEX_SHORT(pkt->pk_phead.ph_sidx),
@@ -690,8 +691,11 @@ concmp(struct packet *rfcpkt, char *lsnstr, int lsnlen)
 {
 	char *rfcstr = rfcpkt->pk_cdata;
 	int rfclen;
+	char crfcstr[CHMAXDATA];
 
-	debugf(DBG_LOW, "Rcvrfc: Comparing %s and %s", rfcstr, lsnstr);
+	memcpy(crfcstr, rfcpkt->pk_cdata, PH_LEN(rfcpkt->pk_phead));
+	crfcstr[PH_LEN(rfcpkt->pk_phead)] = '\0';
+	debugf(DBG_LOW, "Rcvrfc: Comparing %s and %s", crfcstr, lsnstr);
 	debugf(DBG_LOW, "rfcpkt->pk_len = %d lsnlen = %d", 
 	       PH_LEN(rfcpkt->pk_phead),
 	       lsnlen);

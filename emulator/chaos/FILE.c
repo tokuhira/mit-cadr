@@ -78,7 +78,7 @@
 /* use utimes instead of "outmoded" utime */
 #endif
 
-#if defined(__NetBSD__) || defined(OSX)
+#if defined(__NetBSD__) || defined(OSX) || defined(linux)
 #include <utime.h>
 #include <sys/statvfs.h>
 #endif
@@ -2462,7 +2462,7 @@ struct xfer *ax;
 	char response[CHMAXDATA];
 	int errcode = 0;
 	struct tm *tm;
-	
+
 #ifndef SELECT
 	(void)write(ctlpipe[1], (char *)&ax, sizeof(x)); 
 #endif 
@@ -2518,7 +2518,7 @@ struct xfer *ax;
 			
 			log(LOG_INFO, "xclose (3b)\n");
 			
-#if defined(OSX) || defined(BSD42)
+#if defined(OSX) || defined(BSD42) || defined(linux)
 			struct timeval timep[2];
 
 			timep[0].tv_sec = (x->x_options&O_PRESERVE ||
@@ -2547,7 +2547,7 @@ struct xfer *ax;
 			 
 			log(LOG_INFO, "xclose (3c)\n");
 
-#if defined(OSX) || defined(BSD42)
+#if defined(OSX) || defined(BSD42) || defined(linux)
 			if (utimes(x->x_realname, timep)) {
 			   log(LOG_INFO, "error from utimes: errno = %d %s\n", errno, strerror(errno));
 			}
@@ -2566,14 +2566,14 @@ struct xfer *ax;
 #endif
 		if (protocol > 0)
 			(void)sprintf(response,
-				"%02d/%02d/%02d %02d:%02d:%02d %lld%c%s%c",
+				"%02d/%02d/%02d %02d:%02d:%02d %ld%c%s%c",
 				tm->tm_mon+1, tm->tm_mday, tm->tm_year,
 				tm->tm_hour, tm->tm_min, tm->tm_sec,
 				sbuf.st_size, CHNL,
 				x->x_realname, CHNL);
 		else
 			(void)sprintf(response,
-				"%d %02d/%02d/%02d %02d:%02d:%02d %lld%c%s%c",
+				"%d %02d/%02d/%02d %02d:%02d:%02d %ld%c%s%c",
 				-1, tm->tm_mon+1, tm->tm_mday,
 				tm->tm_year, tm->tm_hour, tm->tm_min,
 				tm->tm_sec, sbuf.st_size, CHNL,
@@ -3567,7 +3567,7 @@ char *cp;
 static char *
 xgetbsize(struct stat *s, char *cp)
 {
-	(void)sprintf(cp, "%lld", (s->st_size + FSBSIZE - 1) / FSBSIZE);
+	(void)sprintf(cp, "%ld", (s->st_size + FSBSIZE - 1) / FSBSIZE);
 
 	while (*cp)
 		cp++;
@@ -3588,7 +3588,7 @@ getsize(s, cp)
 register struct stat *s;
 register char *cp;	
 {
-	(void)sprintf(cp, "%lld", s->st_size);
+	(void)sprintf(cp, "%ld", s->st_size);
 	while (*cp)
 		cp++;
 	return cp;
