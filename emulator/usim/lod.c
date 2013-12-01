@@ -27,7 +27,6 @@ int show_initial_fef;
 int show_fef;
 int show_initial_sg;
 int show_memory;
-int set_wide;
 
 struct {
 	char *name;
@@ -155,7 +154,7 @@ read_virt(int fd, int addr)
 	if (b != bnum) {
 		bnum = b;
 
-		if (0) printf("fd %d, block %d(10) offset %ld\n",
+		if (0) printf("fd %d, block %d(10) offset %lld\n",
 			      fd, b, offset);
 
 		ret = lseek(fd, offset, SEEK_SET);
@@ -357,7 +356,7 @@ showstr(int a, int cr)
 }
 
 void
-show_fef_func_name(unsigned int fefptr, unsigned int width)
+show_fef_func_name(unsigned int fefptr)
 {
 	unsigned int n, v;
 	int tag;
@@ -366,12 +365,12 @@ show_fef_func_name(unsigned int fefptr, unsigned int width)
 
 	printf(" "); v = get(n);
 
-	tag = (v >> width) & 037;
+	tag = (v >> 24) & 077;
 	if (0) printf("tag %o\n", tag);
 
 	if (tag == 3) {
 		v = get(v);
-		tag = (v >> width) & 037;
+		tag = (v >> 24) & 077;
 	}
 
 	if (tag == 4) {
@@ -387,18 +386,16 @@ find_and_dump_fef(unsigned int pc)
 	unsigned int addr, v, n, o;
 	int i, j, tag, icount, max;
 	unsigned short ib[512];
-	unsigned int width;
 
 	printf("\n");
 
-	width = set_wide ? 25 : 24;
 	addr = pc >> 2;
 	if (1) printf("pc %o, addr %o\n", pc, addr);
 
 	/* find fef */
 	for (i = 0; i < 512; i--) {
 		n = get(addr);
-		tag = (n >> width) & 037;
+		tag = (n >> 24) & 077;
 		if (tag == 7) break;
 		addr--;
 	}
@@ -436,13 +433,13 @@ find_and_dump_fef(unsigned int pc)
 		case 2:
 			printf(" "); v = show(inst, 0);
 
-			tag = (v >> width) & 037;
+			tag = (v >> 24) & 077;
 			if (0) printf("tag %o\n", tag);
 
 			if (tag == 3) {
 				printf("\n");
 				printf(" "); v = show(v, 0);
-				tag = (v >> 24) & 037;
+				tag = (v >> 24) & 077;
 			}
 			if (tag == 4) {
 				printf(" "); showstr(v, 1);
@@ -454,7 +451,7 @@ find_and_dump_fef(unsigned int pc)
 	for (i = o; i < o+icount; i++) {
 		unsigned int loc;
 		loc = addr+i/2;
-		disass(addr, loc, (i%2) ? 0 : 1, ib[i], width);
+		disass(addr, loc, (i%2) ? 0 : 1, ib[i]);
 	}
 
 	return 0;
@@ -474,7 +471,6 @@ usage(void)
 	fprintf(stderr, "-g	dump initial stack group\n");
 	fprintf(stderr, "-p <pc> find and disassemble FEF for given pc\n");
 	fprintf(stderr, "-a <addr> find and disassemble FEF for given address\n");
-	fprintf(stderr, "-w	decode 25-bit pointers\n");
 	exit(1);
 }
 
@@ -488,7 +484,7 @@ main(int argc, char *argv[])
 	int i, c;
 	unsigned int pc, addr;
 
-	while ((c = getopt(argc, argv, "l:i:csfgp:a:m:w")) != -1) {
+	while ((c = getopt(argc, argv, "l:i:csfgp:a:m:")) != -1) {
 		switch (c) {
 		case 'l':
 			loadband_filename = strdup(optarg);
@@ -520,9 +516,6 @@ main(int argc, char *argv[])
 		case 'm':
 			sscanf(optarg, "%o", &addr);
 			show_memory++;
-			break;
-		case 'w':
-			set_wide++;
 			break;
 		}
 	}

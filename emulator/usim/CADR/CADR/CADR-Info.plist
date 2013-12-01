@@ -32,5 +32,10 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SMPrivilegedExecutables</key>
+	<dict>
+		<key>com.cadr.EtherHelper</key>
+		<string>identifier com.cadr.EtherHelper and certificate leaf[subject.CN] = &quot;Greg Gilley&quot;</string>
+	</dict>
 </dict>
 </plist>

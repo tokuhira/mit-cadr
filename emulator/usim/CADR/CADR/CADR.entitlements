@@ -8,5 +8,11 @@
 	<true/>
 	<key>com.apple.security.files.user-selected.read-write</key>
 	<true/>
+    <key>com.apple.security.temporary-exception.sbpl</key>
+    <string>(begin
+        (allow mach-lookup (global-name "com.cadr.EtherHelper"))
+        (allow mach-lookup (global-name "com.apple.bsd.launchdadd"))
+        (allow authorization-right-obtain (right-name "com.apple.ServiceManagement.blesshelper")))
+    </string>
 </dict>
 </plist>

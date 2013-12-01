@@ -1,7 +1,6 @@
-;;; Written 12/07/81 09:25:58 by rg,
-;;; while running on Lisp Machine Seven from band 1
-;;; with Experimental System 77.5, Experimental ZMail 37.1, microcode 832.
+;;; Written 12/08/12 15:16:22 by ggilley,
+;;; while running on cadr from band 1
+;;; with System 78.0, microcode 841.
 
 
-("System" 78.)
-
+("System" 80.) 

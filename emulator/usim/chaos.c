@@ -159,7 +159,7 @@ chaos_rx_pkt(void)
 #endif
 	  chaos_csr |= CHAOS_CSR_RECEIVE_DONE;
 	  if (chaos_csr & CHAOS_CSR_RECEIVE_ENABLE)
-	    assert_unibus_interrupt(0270);
+	    assert_unibus_interrupt(0404);
 	}
 #if CHAOS_DEBUG
     else
@@ -172,7 +172,7 @@ char_xmit_done_intr(void)
 {
 	chaos_csr |= CHAOS_CSR_TRANSMIT_DONE;
 	if (chaos_csr & CHAOS_CSR_TRANSMIT_ENABLE)
-	  assert_unibus_interrupt(0270);
+	  assert_unibus_interrupt(0400);
 }
 
 char *opcodetable[256] = {

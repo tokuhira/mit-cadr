@@ -10,6 +10,8 @@
 #import "DebuggerController.h"
 #import <Cocoa/Cocoa.h>
 #import <mach/mach_time.h> // for mach_absolute_time
+#import <ServiceManagement/ServiceManagement.h>
+#import <Security/Authorization.h>
 
 #include <sys/time.h>
 
@@ -353,6 +355,36 @@ int read_sym_files_from_resources(void)
 	return 0;
 }
 
+- (BOOL)blessHelperWithLabel:(NSString *)label
+                       error:(NSError **)error {
+    
+	BOOL result = NO;
+    
+	AuthorizationItem authItem		= { kSMRightBlessPrivilegedHelper, 0, NULL, 0 };
+	AuthorizationRights authRights	= { 1, &authItem };
+	AuthorizationFlags flags		=	kAuthorizationFlagDefaults				|
+    kAuthorizationFlagInteractionAllowed	|
+    kAuthorizationFlagPreAuthorize			|
+    kAuthorizationFlagExtendRights;
+    
+	AuthorizationRef authRef = NULL;
+	
+	/* Obtain the right to install privileged helper tools (kSMRightBlessPrivilegedHelper). */
+	OSStatus status = AuthorizationCreate(&authRights, kAuthorizationEmptyEnvironment, flags, &authRef);
+	if (status != errAuthorizationSuccess) {
+        printf("Failed to create AuthorizationRef. Error code: %d\n", status);
+	} else {
+		/* This does all the work of verifying the helper tool against the application
+		 * and vice-versa. Once verification has passed, the embedded launchd.plist
+		 * is extracted and placed in /Library/LaunchDaemons and then loaded. The
+		 * executable is placed in /Library/PrivilegedHelperTools.
+		 */
+		result = SMJobBless(kSMDomainSystemLaunchd, (CFStringRef)label, authRef, (CFErrorRef *)error);
+	}
+	
+	return result;
+}
+
 - (NSURL*)applicationDataDirectory {
     NSFileManager* sharedFM = [NSFileManager defaultManager];
     NSArray* possibleURLs = [sharedFM URLsForDirectory:NSApplicationSupportDirectory
@@ -382,6 +414,14 @@ int read_sym_files_from_resources(void)
     int ether_init(void);
     void iob_warm_boot_key(void);
     
+    NSError *error = nil;
+    if (![self blessHelperWithLabel:@"com.cadr.EtherHelper" error:&error]) {
+        NSLog(@"%@", [NSString stringWithFormat:@"Failed to bless helper. Error: %@", error]);
+//        return;
+    }
+    else
+        printf("Helper available.\n");
+
     // Insert code here to initialize your application
     Black = 0x00000000;
     White = 0xFFFFFFFF;

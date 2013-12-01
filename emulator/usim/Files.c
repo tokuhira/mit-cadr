@@ -1504,7 +1504,6 @@ undataconn(register struct transaction *t)
 		free((char *)f);
 		free(of->f_name);
 		free((char *)of);
-        t->t_fh = FNULL;
 	}
 }
 
@@ -2032,7 +2031,7 @@ openerr:
 		error(t, f != FNULL ? f->f_name : "", errcode);
 	if (dirname)
 		free(dirname);
-    if (!(foptions & O_PROBEDIR) && realname)
+	if (!(foptions & O_PROBEDIR) && realname)
 		free(realname);
 	if (tempname)
 		free(tempname);
@@ -3601,8 +3600,7 @@ chngprop(register struct transaction *t)
             errstring = "CHANGE-PROPERTIES on directory transfer";
             error(t, fhname, BUG);
         } else {
-            file = x->x_options & O_WRITE ? x->x_tempname :
-            x->x_realname;
+            file = x->x_options & O_WRITE ? x->x_tempname : x->x_realname;
             if (stat(file, &sbuf) < 0)
                 fatal(FSTAT);
             goto doit;
@@ -3641,12 +3639,8 @@ chngprop(register struct transaction *t)
                 for (pp = properties; pp->p_indicator; pp++)
                     if (strcmp(pp->p_indicator, plp->p_name) == 0) {
                         if (pp->p_put)
-                            if ((errcode =
-                                 (*pp->p_put)
-                                 (&sbuf, file,
-                                  plp->p_value, x))) {
-                                     error(t,
-                                           fhname, errcode);
+                            if ((errcode = (*pp->p_put)(&sbuf, file, plp->p_value, x))) {
+                                     error(t, fhname, errcode);
                                      return;
                                  } else
                                      break;

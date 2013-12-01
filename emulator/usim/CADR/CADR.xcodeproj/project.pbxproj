@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA3EAAF5167EBA600025219F /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DA3EAAF4167EBA600025219F /* main.c */; };
+		DA3EAB01167EBC320025219F /* com.cadr.EtherHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = DA3EAAF1167EBA600025219F /* com.cadr.EtherHelper */; };
+		DA3EAB03167ECA3C0025219F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3EAB02167ECA3C0025219F /* Security.framework */; };
+		DA3EAB05167ECA4C0025219F /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3EAB04167ECA4C0025219F /* ServiceManagement.framework */; };
 		DD308CD11665E6A000361F6D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD308CD01665E6A000361F6D /* Cocoa.framework */; };
 		DD308CDB1665E6A000361F6D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DD308CD91665E6A000361F6D /* InfoPlist.strings */; };
 		DD308CDD1665E6A000361F6D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DD308CDC1665E6A000361F6D /* main.m */; };
@@ -69,6 +73,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		DA3EAAFE167EBC1E0025219F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD308CC31665E6A000361F6D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA3EAAF0167EBA600025219F;
+			remoteInfo = com.cadr.EtherHelper;
+		};
 		DD308CF11665E6A000361F6D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DD308CC31665E6A000361F6D /* Project object */;
@@ -78,7 +89,35 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		DA3EAAEF167EBA600025219F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		DA3EAB00167EBC240025219F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchServices;
+			dstSubfolderSpec = 1;
+			files = (
+				DA3EAB01167EBC320025219F /* com.cadr.EtherHelper in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		DA3EAAF1167EBA600025219F /* com.cadr.EtherHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = com.cadr.EtherHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA3EAAF4167EBA600025219F /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		DA3EAAFC167EBB550025219F /* EtherHelper-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "EtherHelper-Info.plist"; sourceTree = "<group>"; };
+		DA3EAAFD167EBB550025219F /* EtherHelper-Launchd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "EtherHelper-Launchd.plist"; sourceTree = "<group>"; };
+		DA3EAB02167ECA3C0025219F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		DA3EAB04167ECA4C0025219F /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		DD308CCC1665E6A000361F6D /* CADR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CADR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD308CD01665E6A000361F6D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DD308CD31665E6A000361F6D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -172,11 +211,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DA3EAAEE167EBA600025219F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DD308CC91665E6A000361F6D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA3EAB05167ECA4C0025219F /* ServiceManagement.framework in Frameworks */,
 				DD308CD11665E6A000361F6D /* Cocoa.framework in Frameworks */,
+				DA3EAB03167ECA3C0025219F /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,12 +240,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DA3EAAF3167EBA600025219F /* EtherHelper */ = {
+			isa = PBXGroup;
+			children = (
+				DA3EAAF4167EBA600025219F /* main.c */,
+				DA3EAAFC167EBB550025219F /* EtherHelper-Info.plist */,
+				DA3EAAFD167EBB550025219F /* EtherHelper-Launchd.plist */,
+			);
+			path = EtherHelper;
+			sourceTree = "<group>";
+		};
 		DD308CC11665E6A000361F6D = {
 			isa = PBXGroup;
 			children = (
 				DD3658611665EED400755138 /* proms */,
 				DD308CD61665E6A000361F6D /* CADR */,
 				DD308CF31665E6A000361F6D /* CADRTests */,
+				DA3EAAF3167EBA600025219F /* EtherHelper */,
 				DD308CCF1665E6A000361F6D /* Frameworks */,
 				DD308CCD1665E6A000361F6D /* Products */,
 			);
@@ -208,6 +267,7 @@
 			children = (
 				DD308CCC1665E6A000361F6D /* CADR.app */,
 				DD308CED1665E6A000361F6D /* CADRTests.octest */,
+				DA3EAAF1167EBA600025219F /* com.cadr.EtherHelper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -217,6 +277,8 @@
 			children = (
 				DD308CD01665E6A000361F6D /* Cocoa.framework */,
 				DD308CEE1665E6A000361F6D /* SenTestingKit.framework */,
+				DA3EAB02167ECA3C0025219F /* Security.framework */,
+				DA3EAB04167ECA4C0025219F /* ServiceManagement.framework */,
 				DD308CD21665E6A000361F6D /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -355,6 +417,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		DA3EAAF0167EBA600025219F /* com.cadr.EtherHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA3EAAFA167EBA600025219F /* Build configuration list for PBXNativeTarget "com.cadr.EtherHelper" */;
+			buildPhases = (
+				DA3EAAED167EBA600025219F /* Sources */,
+				DA3EAAEE167EBA600025219F /* Frameworks */,
+				DA3EAAEF167EBA600025219F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = com.cadr.EtherHelper;
+			productName = EtherHelper;
+			productReference = DA3EAAF1167EBA600025219F /* com.cadr.EtherHelper */;
+			productType = "com.apple.product-type.tool";
+		};
 		DD308CCB1665E6A000361F6D /* CADR */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD308CFE1665E6A000361F6D /* Build configuration list for PBXNativeTarget "CADR" */;
@@ -362,10 +441,12 @@
 				DD308CC81665E6A000361F6D /* Sources */,
 				DD308CC91665E6A000361F6D /* Frameworks */,
 				DD308CCA1665E6A000361F6D /* Resources */,
+				DA3EAB00167EBC240025219F /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DA3EAAFF167EBC1E0025219F /* PBXTargetDependency */,
 			);
 			name = CADR;
 			productName = CADR;
@@ -397,9 +478,12 @@
 		DD308CC31665E6A000361F6D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Greg Gilley";
 				TargetAttributes = {
+					DA3EAAF0167EBA600025219F = {
+						DevelopmentTeam = NU3PG23S53;
+					};
 					DD308CCB1665E6A000361F6D = {
 						DevelopmentTeam = NU3PG23S53;
 					};
@@ -419,6 +503,7 @@
 			targets = (
 				DD308CCB1665E6A000361F6D /* CADR */,
 				DD308CEC1665E6A000361F6D /* CADRTests */,
+				DA3EAAF0167EBA600025219F /* com.cadr.EtherHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -487,6 +572,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DA3EAAED167EBA600025219F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA3EAAF5167EBA600025219F /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DD308CC81665E6A000361F6D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -530,6 +623,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DA3EAAFF167EBC1E0025219F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA3EAAF0167EBA600025219F /* com.cadr.EtherHelper */;
+			targetProxy = DA3EAAFE167EBC1E0025219F /* PBXContainerItemProxy */;
+		};
 		DD308CF21665E6A000361F6D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DD308CCB1665E6A000361F6D /* CADR */;
@@ -573,11 +671,56 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		DA3EAAF8167EBA600025219F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "EtherHelper/EtherHelper-Info.plist";
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"EtherHelper/EtherHelper-Info.plist",
+					"-sectcreate",
+					__TEXT,
+					__launchd_plist,
+					"EtherHelper/EtherHelper-Launchd.plist",
+				);
+				PRODUCT_NAME = com.cadr.EtherHelper;
+				PROVISIONING_PROFILE = "";
+			};
+			name = Debug;
+		};
+		DA3EAAF9167EBA600025219F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				INFOPLIST_FILE = "EtherHelper/EtherHelper-Info.plist";
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"EtherHelper/EtherHelper-Info.plist",
+					"-sectcreate",
+					__TEXT,
+					__launchd_plist,
+					"EtherHelper/EtherHelper-Launchd.plist",
+				);
+				PRODUCT_NAME = com.cadr.EtherHelper;
+				PROVISIONING_PROFILE = "";
+			};
+			name = Release;
+		};
 		DD308CFC1665E6A000361F6D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -590,6 +733,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"COCOA=1",
+					"CADR2=1",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -606,7 +750,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -615,7 +758,10 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = "COCOA=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"COCOA=1",
+					"CADR2=1",
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -638,6 +784,7 @@
 					"DEBUG=1",
 					"DISPLAY_OSX=1",
 					"MAP_SITE_TREE_DIRECTORY=1",
+					"CADR2=1",
 				);
 				INFOPLIST_FILE = "CADR/CADR-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -658,6 +805,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DISPLAY_OSX=1",
 					"MAP_SITE_TREE_DIRECTORY=1",
+					"CADR2=1",
 				);
 				INFOPLIST_FILE = "CADR/CADR-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -699,6 +847,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DA3EAAFA167EBA600025219F /* Build configuration list for PBXNativeTarget "com.cadr.EtherHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA3EAAF8167EBA600025219F /* Debug */,
+				DA3EAAF9167EBA600025219F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DD308CC61665E6A000361F6D /* Build configuration list for PBXProject "CADR" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

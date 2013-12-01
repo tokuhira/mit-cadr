@@ -796,7 +796,7 @@ if ((vaddr & 077700000) == 077200000) {
 static inline void
 write_ucode(int addr, ucw_t w)
 {
-	tracef("u-code write; %Lo @ %o\n", w, addr);
+	tracef("u-code write; %llo @ %o\n", w, addr);
 	ucode[addr] = w;
 }
 

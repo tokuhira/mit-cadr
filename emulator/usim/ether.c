@@ -29,6 +29,7 @@
 #include <sys/socket.h>
 #include <net/if.h>
 #include <net/bpf.h>
+#include <xpc/xpc.h>
 #endif
 
 #if defined(BSD) && !defined(OSX)
@@ -101,6 +102,11 @@ uint32_t hash0, hash1, txctrl;
 uint32_t packet[375];
 int enabled;
 
+#if defined(OSX)
+xpc_connection_t connection;
+
+#endif
+
 extern void assert_xbus_interrupt(void);
 extern int read_phy_mem(int paddr, unsigned int *pv);
 extern int write_phy_mem(int paddr, unsigned int v);
@@ -161,6 +167,53 @@ ether_init(void)
 
 	close(s);
 #endif
+#if defined(OSX)
+        connection = xpc_connection_create_mach_service("com.cadr.EtherHelper", NULL, XPC_CONNECTION_MACH_SERVICE_PRIVILEGED);
+        if (!connection) {
+            printf("Failed to create XPC connection.\n");
+            return -1;
+        }
+        
+        xpc_connection_set_event_handler(connection, ^(xpc_object_t event) {
+            xpc_type_t type = xpc_get_type(event);
+            
+            if (type == XPC_TYPE_ERROR) {
+                
+                if (event == XPC_ERROR_CONNECTION_INTERRUPTED) {
+                    printf("XPC connection interupted.\n");
+                    
+                } else if (event == XPC_ERROR_CONNECTION_INVALID) {
+                    printf("XPC connection invalid, releasing.\n");
+                    xpc_release(connection);
+                    
+                } else {
+                    printf("Unexpected XPC connection error.\n");
+                }
+                
+            } else {
+                printf("Unexpected XPC connection event.\n");
+            }
+        });
+        
+        xpc_connection_resume(connection);
+        enabled = 1;
+
+#if 0
+        xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
+        const char* request = "Hi there, helper service.";
+        xpc_dictionary_set_string(message, "request", request);
+        
+        printf("Sending request: %s\n", request);
+        
+        xpc_connection_send_message_with_reply(connection, message, dispatch_get_main_queue(), ^(xpc_object_t event) {
+            const char* response = xpc_dictionary_get_string(event, "reply");
+            printf("Received response: %s.\n", response);
+
+        });
+#endif
+
+        //    xpc_data_create(dataPtr, length)
+#endif // OSX
 	return 0;
 }
 
@@ -174,67 +227,104 @@ ether_poll(void)
 #if defined(BSD) && !defined(OSX)
 	ssize_t ret;
 #endif
-    
+
 	if (enabled) {
 
 	    if (moder & ETHER_MODE_TXEN) {
-		for (i = 0; i < tx_bd_num; i++) {
-		    status = descs.desc_structs[i].status;
-		    if (status & ETHER_DESC_TX_READY) {
-			len = (size_t) descs.desc_structs[i].len;
-			ptr = descs.desc_structs[i].ptr;
-			words = (int)((len + 3) >> 2);
-			for (j = 0; j < words; j++) {
-			    read_phy_mem(ptr + j, &packet[j]);
-			}
-			if (status & ETHER_DESC_TX_PAD)
-			    len = MAX(len, 60);
+            for (i = 0; i < tx_bd_num; i++) {
+                status = descs.desc_structs[i].status;
+                if (status & ETHER_DESC_TX_READY) {
+                len = (size_t) descs.desc_structs[i].len;
+                ptr = descs.desc_structs[i].ptr;
+                words = (int)((len + 3) >> 2);
+                for (j = 0; j < words; j++) {
+                    read_phy_mem(ptr + j, &packet[j]);
+                }
+                if (status & ETHER_DESC_TX_PAD)
+                    len = MAX(len, 60);
 
 #if defined(BSD) && !defined(OSX)
-			ret = write(tap_fd, packet, len);
-			if (ret != len) {
-			    perror("write"); 
-			}
+                ret = write(tap_fd, packet, len);
+                if (ret != len) {
+                    perror("write"); 
+                }
+#endif
+#if defined(OSX)
+                xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
+                const char* request = "Hi there, helper service.";
+                xpc_dictionary_set_string(message, "request", request);
+                xpc_dictionary_set_string(message, "op", "write");
+                xpc_dictionary_set_data(message, "packet", packet, len);
+                
+                printf("Sending request: %s\n", request);
+                
+                xpc_connection_send_message_with_reply(connection, message, dispatch_get_main_queue(), ^(xpc_object_t event) {
+                    const char* response = xpc_dictionary_get_string(event, "reply");
+                    printf("Received response: %s.\n", response);
+                    
+                });
 #endif
 
-			status &= ~ETHER_DESC_TX_READY;
-			descs.desc_structs[i].status = status;
+                status &= ~ETHER_DESC_TX_READY;
+                descs.desc_structs[i].status = status;
 
-			if (status & ETHER_DESC_TX_IRQ)
-			    int_source |= ETHER_INT_TXB;    
-		    }
+                if (status & ETHER_DESC_TX_IRQ)
+                    int_source |= ETHER_INT_TXB;    
+                }
 
-		    if (status & ETHER_DESC_TX_WRAP) break;
-		}
+                if (status & ETHER_DESC_TX_WRAP) break;
+            }
 	    }
 
 	    if (moder & ETHER_MODE_RXEN) {
-		for (i = tx_bd_num; i < 0x80; i++) {
-		    status = descs.desc_structs[i].status;
-		    if (status & ETHER_DESC_RX_EMPTY) {
+            for (i = tx_bd_num; i < 0x80; i++) {
+                status = descs.desc_structs[i].status;
+                if (status & ETHER_DESC_RX_EMPTY) {
 #if defined(BSD) && !defined(OSX)
-			len = read(tap_fd, packet, sizeof(packet));
+                len = read(tap_fd, packet, sizeof(packet));
 #else
-			len = -1;
+                len = -1;
+#if defined(OSX)
+                xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
+                const char* request = "Hi there, helper service.";
+                xpc_dictionary_set_string(message, "request", request);
+                xpc_dictionary_set_string(message, "op", "read");
+                
+                printf("Sending request: %s\n", request);
+                
+                xpc_connection_send_message_with_reply(connection, message, dispatch_get_main_queue(), ^(xpc_object_t event) {
+                    const char* response = xpc_dictionary_get_string(event, "reply");
+                    size_t len;
+                    const void *packet;
+
+                    printf("Received response: %s.\n", response);
+                    packet = xpc_dictionary_get_data(event, "packet", &len);
+                    if (packet)
+                    {
+                        printf("got packet: len=%zd\n", len);
+                    }
+                    
+                });
 #endif
-			if (len == -1) break;
+#endif
+                if (len == -1) break;
 
-			ptr = descs.desc_structs[i].ptr;
-			descs.desc_structs[i].len = (uint16_t) len;
-			words = (int)((len + 3) >> 2);
-			for (j = 0; j < words; j++) {
-			    write_phy_mem(ptr + j, packet[j]);
-			}
+                ptr = descs.desc_structs[i].ptr;
+                descs.desc_structs[i].len = (uint16_t) len;
+                words = (int)((len + 3) >> 2);
+                for (j = 0; j < words; j++) {
+                    write_phy_mem(ptr + j, packet[j]);
+                }
 
-			status &= ~ETHER_DESC_RX_EMPTY;
-			descs.desc_structs[i].status = status;
+                status &= ~ETHER_DESC_RX_EMPTY;
+                descs.desc_structs[i].status = status;
 
-			if (status & ETHER_DESC_RX_IRQ)
-			    int_source |= ETHER_INT_RXB;    
-		    }
+                if (status & ETHER_DESC_RX_IRQ)
+                    int_source |= ETHER_INT_RXB;    
+                }
 
-		    if (status & ETHER_DESC_RX_WRAP) break;
-		}
+                if (status & ETHER_DESC_RX_WRAP) break;
+            }
 	    }
 #if 0
 	    if (int_source & int_mask)
