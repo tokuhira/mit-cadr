@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA3D99E218BC24E00037AC23 /* ucadr.sym.843 in Resources */ = {isa = PBXBuildFile; fileRef = DA3D99E018BC24E00037AC23 /* ucadr.sym.843 */; };
+		DA3D99E318BC24E00037AC23 /* ucadr.mcr.843 in Resources */ = {isa = PBXBuildFile; fileRef = DA3D99E118BC24E00037AC23 /* ucadr.mcr.843 */; };
 		DD308CD11665E6A000361F6D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD308CD01665E6A000361F6D /* Cocoa.framework */; };
 		DD308CDB1665E6A000361F6D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = DD308CD91665E6A000361F6D /* InfoPlist.strings */; };
 		DD308CDD1665E6A000361F6D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DD308CDC1665E6A000361F6D /* main.m */; };
@@ -66,6 +68,10 @@
 		DD3658601665EEC800755138 /* ucadr.sym.979 in Resources */ = {isa = PBXBuildFile; fileRef = DD3658531665EEC800755138 /* ucadr.sym.979 */; };
 		DD73006E16671C8300706ED9 /* cadr icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = DD73006D16671C8300706ED9 /* cadr icon.icns */; };
 		DDA39C211671AF840079DDDF /* CADR_profile.provisionprofile in Resources */ = {isa = PBXBuildFile; fileRef = DDA39C201671AF840079DDDF /* CADR_profile.provisionprofile */; };
+		DDD7ED9E18AC8A95005E0364 /* File.sys99 in Resources */ = {isa = PBXBuildFile; fileRef = DDD7ED9A18AC8A94005E0364 /* File.sys99 */; };
+		DDD7ED9F18AC8A95005E0364 /* partition-78.48-LOD1 in Resources */ = {isa = PBXBuildFile; fileRef = DDD7ED9B18AC8A94005E0364 /* partition-78.48-LOD1 */; };
+		DDD7EDA018AC8A95005E0364 /* partition-78.50-LOD1 in Resources */ = {isa = PBXBuildFile; fileRef = DDD7ED9C18AC8A94005E0364 /* partition-78.50-LOD1 */; };
+		DDD7EDA118AC8A95005E0364 /* partition-sys210-LOD2 in Resources */ = {isa = PBXBuildFile; fileRef = DDD7ED9D18AC8A94005E0364 /* partition-sys210-LOD2 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +85,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DA3D99E018BC24E00037AC23 /* ucadr.sym.843 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ucadr.sym.843; path = ../../bands/ucadr.sym.843; sourceTree = "<group>"; };
+		DA3D99E118BC24E00037AC23 /* ucadr.mcr.843 */ = {isa = PBXFileReference; lastKnownFileType = file; name = ucadr.mcr.843; path = ../../bands/ucadr.mcr.843; sourceTree = "<group>"; };
 		DD308CCC1665E6A000361F6D /* CADR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CADR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD308CD01665E6A000361F6D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		DD308CD31665E6A000361F6D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -169,6 +177,10 @@
 		DD73006D16671C8300706ED9 /* cadr icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "cadr icon.icns"; sourceTree = SOURCE_ROOT; };
 		DDA39C17166EFC2A0079DDDF /* CADR.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = CADR.entitlements; sourceTree = "<group>"; };
 		DDA39C201671AF840079DDDF /* CADR_profile.provisionprofile */ = {isa = PBXFileReference; lastKnownFileType = file; path = CADR_profile.provisionprofile; sourceTree = "<group>"; };
+		DDD7ED9A18AC8A94005E0364 /* File.sys99 */ = {isa = PBXFileReference; lastKnownFileType = file; name = File.sys99; path = ../../bands/File.sys99; sourceTree = "<group>"; };
+		DDD7ED9B18AC8A94005E0364 /* partition-78.48-LOD1 */ = {isa = PBXFileReference; lastKnownFileType = file; name = "partition-78.48-LOD1"; path = "../../bands/partition-78.48-LOD1"; sourceTree = "<group>"; };
+		DDD7ED9C18AC8A94005E0364 /* partition-78.50-LOD1 */ = {isa = PBXFileReference; lastKnownFileType = file; name = "partition-78.50-LOD1"; path = "../../bands/partition-78.50-LOD1"; sourceTree = "<group>"; };
+		DDD7ED9D18AC8A94005E0364 /* partition-sys210-LOD2 */ = {isa = PBXFileReference; lastKnownFileType = file; name = "partition-sys210-LOD2"; path = "../../bands/partition-sys210-LOD2"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,9 +204,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DA56548C18B3D94B0025C1E6 /* bands */ = {
+			isa = PBXGroup;
+			children = (
+				DDD7ED9A18AC8A94005E0364 /* File.sys99 */,
+				DDD7ED9B18AC8A94005E0364 /* partition-78.48-LOD1 */,
+				DDD7ED9C18AC8A94005E0364 /* partition-78.50-LOD1 */,
+				DDD7ED9D18AC8A94005E0364 /* partition-sys210-LOD2 */,
+			);
+			name = bands;
+			sourceTree = "<group>";
+		};
 		DD308CC11665E6A000361F6D = {
 			isa = PBXGroup;
 			children = (
+				DA56548C18B3D94B0025C1E6 /* bands */,
 				DD3658611665EED400755138 /* proms */,
 				DD308CD61665E6A000361F6D /* CADR */,
 				DD308CF31665E6A000361F6D /* CADRTests */,
@@ -344,6 +368,8 @@
 				DD36584D1665EEC800755138 /* promh.9 */,
 				DD36584E1665EEC800755138 /* promh.sym.9 */,
 				DD36584F1665EEC800755138 /* ucadr.lisp.841 */,
+				DA3D99E018BC24E00037AC23 /* ucadr.sym.843 */,
+				DA3D99E118BC24E00037AC23 /* ucadr.mcr.843 */,
 				DD3658501665EEC800755138 /* ucadr.mcr.841 */,
 				DD3658511665EEC800755138 /* ucadr.mcr.979 */,
 				DD3658521665EEC800755138 /* ucadr.sym.841 */,
@@ -397,8 +423,13 @@
 		DD308CC31665E6A000361F6D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Greg Gilley";
+				TargetAttributes = {
+					DD308CCB1665E6A000361F6D = {
+						DevelopmentTeam = NU3PG23S53;
+					};
+				};
 			};
 			buildConfigurationList = DD308CC61665E6A000361F6D /* Build configuration list for PBXProject "CADR" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -423,8 +454,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDD7ED9E18AC8A95005E0364 /* File.sys99 in Resources */,
+				DDD7ED9F18AC8A95005E0364 /* partition-78.48-LOD1 in Resources */,
+				DDD7EDA018AC8A95005E0364 /* partition-78.50-LOD1 in Resources */,
+				DDD7EDA118AC8A95005E0364 /* partition-sys210-LOD2 in Resources */,
 				DD308CDB1665E6A000361F6D /* InfoPlist.strings in Resources */,
 				DD308CE11665E6A000361F6D /* Credits.rtf in Resources */,
+				DA3D99E318BC24E00037AC23 /* ucadr.mcr.843 in Resources */,
 				DD308CE71665E6A000361F6D /* MainMenu.xib in Resources */,
 				DD3658301665EAC000755138 /* CreateDisk.xib in Resources */,
 				DD3658351665EAC000755138 /* Breakpoints.xib in Resources */,
@@ -441,6 +477,7 @@
 				DD3658551665EEC800755138 /* cadr_2.bin in Resources */,
 				DD3658561665EEC800755138 /* cadr_3.bin in Resources */,
 				DD3658571665EEC800755138 /* cadr_4.bin in Resources */,
+				DA3D99E218BC24E00037AC23 /* ucadr.sym.843 in Resources */,
 				DD3658581665EEC800755138 /* cadr_5.bin in Resources */,
 				DD3658591665EEC800755138 /* cadr_6.bin in Resources */,
 				DD36585A1665EEC800755138 /* promh.9 in Resources */,
@@ -572,7 +609,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -601,7 +637,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -624,7 +659,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CADR/CADR.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer: Greg Gilley (HW2UG2Q7MX)";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CADR/CADR-Prefix.pch";
@@ -644,7 +680,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CADR/CADR.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer: Greg Gilley (HW2UG2Q7MX)";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CADR/CADR-Prefix.pch";
