@@ -1,0 +1,13 @@
+This directory contains a port of the Lisp Machine cold load generator
+to Common Lisp.
+
+It probably requires a 64-bit Common Lisp implementation to run.
+
+The .asd file isn't functional yet with ASDF, to use the code do:
+
+(load "cold.asd")
+(load "coldut")
+(load "coldld")
+(load "sysdcl")
+(cold:make-cold "filename.lod")
+
