@@ -9,7 +9,7 @@
 (defparameter +cold-load-file-list+
 	  '("sys:fonts;cptfon.qfasl"
 	    "sys:sys;qrand.qfasl"
-;	    "sys:sys;fspec.qfasl"
+	    "sys:sys;fspec.qfasl"
 	    "sys:io;qio.qfasl"
 ;	    "sys:io;rdtbl.qfasl"	;done specially
 ;	    "sys:io;crdtbl.qfasl"	;done specially
