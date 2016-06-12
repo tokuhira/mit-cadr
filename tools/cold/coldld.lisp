@@ -321,13 +321,16 @@
 (defun m-fasl-op-float ()
   (q-fasl-op-float))
 
+;;; XXX fix this
 (defun m-fasl-op-float-float ()
   (prog (ans tmp)
     (setq ans (float 0))
-    (%p-dpb-offset (qfasl-next-nibble) #o1013 ans 0)
+    ;(%p-dpb-offset (qfasl-next-nibble) #o1013 ans 0)
+    (qfasl-next-nibble)
     (setq tmp (qfasl-next-nibble))
-    (%p-dpb-offset (lispm-ldb #o1010 tmp) #o0010 ans 0)
-    (%p-dpb-offset (lispm-dpb tmp #o2010 (qfasl-next-nibble)) #o0030 ans 1)
+    ;(%p-dpb-offset (lispm-ldb #o1010 tmp) #o0010 ans 0)
+    ;(%p-dpb-offset (lispm-dpb tmp #o2010 (qfasl-next-nibble)) #o0030 ans 1)
+    (qfasl-next-nibble)
     (return (m-enter-fasl-table ans))))
 
 
@@ -901,7 +904,7 @@
 ;		sym:dtp-null)
 ;       (vstore-contents (+ (qintern function) 2) (vcontents (+ (qintern defsym) 2))))
      )
-    ((and (eq (car form) sym:forward-value-cell) ;(sym:quote ,alias-sym) (sym:quote ,defsym))
+    ((and (eq (car form) 'sym:forward-value-cell) ;(sym:quote ,alias-sym) (sym:quote ,defsym))
      (symbolp (cadr (cadr form))) (symbolp (cadr (caddr form))))
      (push form evals-to-be-sent-over)
      (vstore-contents (+ (qintern (cadr (cadr form))) 1)

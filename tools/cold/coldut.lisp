@@ -753,11 +753,14 @@ A-flavor-of ~S being-created, atom-name ~S, path ~S, package-name ~S"
 (defun store-flonum (area number)
   (and (memq area sym:list-structured-areas)
        (error "extended-number in list-structured area ~S" area))
-  (format t "store-flonum: ~S ~S~%" (type-of number) number)
+  (format t "store-flonum: ~S ~F~%" (type-of number) number)
   (let* ((size 2) ; XXX (%structure-total-size number)
 	 (adr (allocate-block area size)))
-    (loop for i from 0 below size
-	  do (vwrite (+ adr i) number))
+    (vwrite-cdr adr sym:cdr-nil
+		(lispm-dpb sym:dtp-header sym:%%q-all-but-pointer
+			   (lispm-dpb sym:%header-type-flonum
+				      sym:%%header-type-field (1- size))))
+    ;(vwrite (+ adr 1) (ldb (byte 31 0) number))
     (vmake-pointer sym:dtp-extended-number adr)))
 
 ;;; New version of qintern.  Machine builds obarray when it first comes up (easy enough).
