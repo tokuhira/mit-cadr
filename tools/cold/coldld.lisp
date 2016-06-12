@@ -902,13 +902,14 @@
 ;		sym:dtp-null)
 ;       (vstore-contents (+ (qintern function) 2) (vcontents (+ (qintern defsym) 2))))
      )
-    ((and (eq (car form) `sym:forward-value-cell) ;(sym:quote ,alias-sym) (sym:quote ,defsym))
+    ((and (eq (car form) sym:forward-value-cell) ;(sym:quote ,alias-sym) (sym:quote ,defsym))
      (symbolp (cadr (cadr form))) (symbolp (cadr (caddr form))))
      (push form evals-to-be-sent-over)
      (vstore-contents (+ (qintern (cadr (cadr form))) 1)
 		      (lispm-dpb sym:dtp-one-q-forward
 			   sym:%%q-data-type
-			   (+ (qintern (cadr (caddr form))) 1))))
+			   (+ (qintern (cadr (caddr form))) 1)))
+     (m-q-enter-fasl-table nil qnil))
     (t
      ;; If this is a defvar or defconst, store the value now
      ;; in addition to causing it to be evaluated later.
