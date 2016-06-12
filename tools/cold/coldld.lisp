@@ -304,18 +304,17 @@
 		 (m-enter-fasl-table ans))
     (setq ans (lispm-dpb (qfasl-next-nibble) (+ (ash pos 6) #o20) ans))))
 
-;Generate a FIXNUM (or BIGNUM) value.
+;Generate a CHARACTER value.
 (defun m-fasl-op-character ()
-  (error "m-fasl-op-character"))
-
-;  (do ((pos (* (1- fasl-group-length) #o20) (- pos #o20))
-;       (c fasl-group-length (1- c))
-;       (ans 0))
-;      ((zerop c)
-;       (cond (fasl-group-flag (setq ans (- 0 ans))))
-;       (setq ans (%make-pointer sym:dtp-character ans))
-;       (m-enter-fasl-table ans))
-;    (setq ans (lispm-dpb (qfasl-next-nibble) (+ (ash pos 6) #o20) ans))))
+  (do ((pos (* (1- fasl-group-length) #o20) (- pos #o20))
+       (c fasl-group-length (1- c))
+       (ans 0))
+      ((zerop c)
+       (cond (fasl-group-flag (setq ans (- 0 ans))))
+       ;; comment out next line if building earlier than system 99
+       (setq ans (%make-pointer sym:dtp-character ans))
+       (m-enter-fasl-table ans))
+      (setq ans (lispm-dpb (qfasl-next-nibble) (+ (ash pos 6) #o20) ans))))
 
 ;;; NEW FLOAT OP!! not yet written. See sys; qfasl
 
