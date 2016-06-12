@@ -515,12 +515,10 @@
      (unless (<= 1 (length last-array-dims) 2)
        (error "Only 1 and 2-dimensional arrays can be loaded."))
      (setq ptr (+ ptr (if long-flag 1 0) ndims))	;To data
-     (if (eq array-index-order sym:new-array-index-order)
-	 ;; Order of data matches order in world being created, so it's easy.
-	 (dotimes (n num)				;Initialize specified num of vals
-	   (vwrite ptr (q-fasl-next-value))
-	   (setq ptr (1+ ptr)))
-       (error "Need to swap array dimensions."))
+     ;; Order of data matches order in world being created, so it's easy.
+     (dotimes (n num)				;Initialize specified num of vals
+	      (vwrite ptr (q-fasl-next-value))
+	      (setq ptr (1+ ptr)))
        ;; XXX
 ;       (let ((temp1 (make-array last-array-dims :initial-element qnil)) temp2)
 ;	 ;; Read in the values, then transpose them,
@@ -554,16 +552,13 @@
 		      (eq last-array-type 'sym:art-16b)))
        (error "Only 1-dimensional, or 2-dimensional art-16b, numeric arrays can be loaded."))
 
-     (if (or (= (length last-array-dims) 1)
-	     (eq array-index-order sym:new-array-index-order))
-	 ;; Order of data matches order in world being created, so it's easy.
-	 (progn
-	   (dotimes (n (/ num 2))	;Initialize specified num of vals
-	     (vwrite ptr (+ (qfasl-nibble) (ash (qfasl-nibble) 16.)))
-	     (setq ptr (1+ ptr)))
-	   (cond ((oddp num)				;odd, catch last nibble
-		  (vwrite ptr (qfasl-nibble)))))
-       (error "Need to swap array dimensions."))
+     ;; Order of data matches order in world being created, so it's easy.
+     (progn
+       (dotimes (n (/ num 2))	;Initialize specified num of vals
+		(vwrite ptr (+ (qfasl-nibble) (ash (qfasl-nibble) 16.)))
+		(setq ptr (1+ ptr)))
+       (cond ((oddp num)				;odd, catch last nibble
+	      (vwrite ptr (qfasl-nibble)))))
      ;; XXX
 ;       (let ((temp1 (make-array last-array-dims ':type art-16b)) temp2)
 	 ;; Read in the values, then transpose them,
