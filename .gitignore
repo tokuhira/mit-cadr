@@ -1,0 +1,19 @@
+*.o
+
+# built files
+emulator/chaos/FILE
+emulator/chaos/MINI
+emulator/chaos/chaosd
+emulator/chaos/client
+emulator/chaos/listen
+emulator/chaos/server
+emulator/chaos/time
+emulator/usim/diskmaker
+emulator/usim/lmfs
+emulator/usim/lod
+emulator/usim/readmcr
+emulator/usim/usim
+
+# extras
+emulator/chaos/server.log
+emulator/usim/disk.img
