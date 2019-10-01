@@ -47,7 +47,7 @@
 #define SDLK_RIGHT	XK_Right
 #define SDLK_UP		XK_Up
 #define SDLK_TAB	XK_Tab
-#define SDLK_ESC	XK_Escape
+#define SDLK_ESCAPE	XK_Escape
 #endif /* DISPLAY_X11 */
 
 #ifdef DISPLAY_OSX
@@ -74,7 +74,7 @@
 #define SDLK_RIGHT	124
 #define SDLK_UP		126
 #define SDLK_TAB	48
-#define SDLK_ESC	53
+#define SDLK_ESCAPE	53
 #define SDLK_a      0
 #define SDLK_b      11
 #define SDLK_c      8
@@ -312,7 +312,7 @@ iob_sdl_key_event(int code, int extra)
 	case SDLK_TAB:
 		iob_key_scan = 18;
 		break;
-	case SDLK_ESC:
+	case SDLK_ESCAPE:
 		iob_key_scan = 1;
 		break;
 	default:
